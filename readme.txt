@@ -4,7 +4,7 @@
 - Python 3.8+
 - Install Ollama: https://ollama.ai/download
 - Pull a model:
-  - `ollama pull llama3.2:3b-instruct` (fastest on low-RAM)
+  - `ollama pull gemma:2b-instruct` (fastest on low-RAM)
   - or `ollama pull mistral:instruct`
 
 
