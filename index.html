@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Local Chatbot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body { font-family: system-ui, sans-serif; max-width: 720px; margin: 2rem auto; }
+      #log { white-space: pre-wrap; border: 1px solid #ddd; padding: 1rem; border-radius: 8px; min-height: 300px; }
+      .row { display:flex; gap:.5rem; margin-top:1rem; }
+      input, button { padding:.6rem .8rem; font-size:1rem; }
+      input { flex:1; }
+    </style>
+  </head>
+  <body>
+    <h1>🤖 Local Chatbot (Ollama)</h1>
+    <div id="log"></div>
+    <div class="row">
+      <input id="msg" placeholder="Type your message..." />
+      <button id="send">Send</button>
+    </div>
+
+    <script>
+      const log = document.getElementById('log');
+      const msg = document.getElementById('msg');
+      const send = document.getElementById('send');
+      const history = [];
+
+      function append(role, text) {
+        log.textContent += `${role}: ${text}\n\n`;
+        log.scrollTop = log.scrollHeight;
+      }
+
+      async function sendMsg() {
+        const text = msg.value.trim();
+        if (!text) return;
+        append("You", text);
+        msg.value = "";
+
+        const res = await fetch("http://127.0.0.1:8000/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text, history })
+        });
+        const data = await res.json();
+        append("Bot", data.reply);
+
+        // push the two new turns into history for context
+        history.push({ role: "user", content: text });
+        history.push({ role: "assistant", content: data.reply });
+      }
+
+      send.onclick = sendMsg;
+      msg.addEventListener('keydown', e => (e.key === 'Enter') && sendMsg());
+    </script>
+  </body>
+</html>
