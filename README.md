@@ -12,9 +12,12 @@
 ```bash
 pip install ollama
 python chatbot_cli.py
+```
 
 ## Run (Web)
+```
 pip install -r requirements.txt
 uvicorn app:app --reload --port 8000
+```
 
 Open `index.html` in your browser and use the UI (it sends requests to http://127.0.0.1:8000/chat).
